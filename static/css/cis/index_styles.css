@@ -1,0 +1,289 @@
+
+@font-face {
+    font-family: 'Yekan Bakh';
+    /*src: url('../fonts/Yekan-Bakh-Regular.ttf') format('truetype');*/
+    font-weight: normal;
+    font-style: normal;
+}
+
+body, h1, h2, p, ul {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Yekan Bakh', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f0f0f5;
+    direction: rtl;
+    text-align: right;
+    padding-top: 70px; /* اگر navbar حدود 70px ارتفاع دارد */
+}
+
+/* Navbar */
+.navbar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 999; /* مطمئن شو روی همه عناصر دیگه قرار بگیره */
+    background-color: #2b2a2a;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    color: #fff;
+    flex-wrap: wrap;
+    gap: 10px;
+    direction: rtl;
+}
+
+.right-group {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.right-group .logo {
+    font-weight: bold;
+    font-size: x-large;
+}
+
+.navbar .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 0;
+    padding-right: 20px;
+}
+
+.right-group a {
+    color: #fff;
+    text-decoration: none;
+    position: relative;
+    padding-bottom: 4px;
+    transition: color 0.3s ease;
+}
+
+.navbar .right-group a::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background-color: #6683a2;
+    transition: width 0.3s ease;
+}
+
+.navbar .right-group a:hover {
+    color: #6683a2;
+}
+
+.navbar .right-group a:hover::after {
+    width: 100%;
+    left: 0;
+    right: auto;
+}
+
+.navbar .auth-buttons {
+    padding-left: 20px;
+    display: flex;
+    gap: 15px;
+    direction: ltr;
+}
+
+.navbar .auth-buttons .btn {
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #fff;
+}
+
+.navbar .auth-buttons .login-btn {
+    background-color: #3498db;
+}
+
+.navbar .auth-buttons .signup-btn {
+    background-color: #2ecc71;
+}
+
+.navbar .auth-buttons .login-btn:hover{
+    background-color: #0b5ed7;
+}
+
+.navbar .auth-buttons .signup-btn:hover{
+    background-color: #298b1b;
+}
+
+/* Hero Section */
+.hero {
+    height: 85vh;
+    background-image: url('/static/images/cis-v8.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* بالا و پایین */
+    align-items: center;
+    padding: 40px 20px;
+    text-align: center;
+    color: white;
+    position: relative;
+}
+
+.hero-content {
+    z-index: 2;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.1);
+    z-index: 1;
+}
+
+.hero h1,
+.hero p {
+    margin: 0 0 10px;
+    position: relative;
+    z-index: 2;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    padding-top: 30px;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+.hero-btn {
+    display: inline-block;
+    padding: 15px 25px;
+    background-color: #0d6efd;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    margin-bottom: 80px; /* فاصله از پایین */
+    position: relative;
+    z-index: 2;
+    font-size: 22px;
+}
+
+.hero-btn:hover {
+    background-color: #0b5ed7;
+}
+
+/* Features Section */
+.features {
+    padding: 50px 20px;
+    text-align: center;
+    background-color: #fff;
+}
+
+.features h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.features .feature-list {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.feature-icon {
+    font-size: 3rem;
+    color: #0d6efd;
+    margin-bottom: 10px;
+}
+
+.feature-item {
+    background-color: #ecf0f1;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+.feature-item h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.feature-item {
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-item:hover {
+    transform: scale(1.05);
+    background-color: #dfe6e9; /* رنگ بک‌گراند هنگام هاور */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* افزایش سایه برای برجسته‌سازی */
+}
+
+/* Footer */
+footer {
+    background-color: #2b2a2a;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+}
+
+footer .social-links {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+footer .social-links a {
+    color: #fff;
+    text-decoration: none;
+}
+
+
+.nav-links {
+    display: flex;
+    gap: 15px;
+    list-style: none;
+}
+
+/* حالت موبایل */
+@media (max-width: 768px) {
+
+    .nav-links {
+        display: none; /* مخفی شود */
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        background-color: #066aab;
+        padding: 10px 0;
+    }
+
+    .nav-links.active {
+        display: flex; /* وقتی کلاس active اضافه شد، نشان داده شود */
+    }
+
+    .auth-buttons {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 10px;
+    }
+}
+
