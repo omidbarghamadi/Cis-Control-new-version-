@@ -72,6 +72,7 @@ ENV/
 env.bak/
 venv.bak/
 site
+.sqlite3
 
 # Jupyter Notebook
 .ipynb_checkpoints
