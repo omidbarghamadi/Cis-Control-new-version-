@@ -1,0 +1,132 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Yekan Bakh', sans-serif;
+    background-color: #f0f0f5;
+    color: #333;
+    direction: rtl;
+    text-align: right;
+}
+
+
+.form-container {
+    width: 500px;
+    margin: 50px auto 50px; /* فاصله از بالا و مرکز افقی */
+    /*margin-bottom: 50px;*/
+    background-color: #ffffff;
+    padding: 30px 25px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+    font-family: 'Yekan Bakh', sans-serif;
+    color: #333;
+    direction: rtl;
+    text-align: right;
+}
+
+.form-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        .form-header img {
+            width: 50px;
+            height: 50px;
+            margin-left: 10px; /* فاصله بین لوگو و متن */
+        }
+
+        .form-header h2 {
+            font-size: 29px;
+            color: #2b2a2a;
+            font-family: 'Yekan Bakh', sans-serif;
+            margin: 0;
+        }
+
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 6px;
+    color: #2b2a2a;
+    font-weight: bold;
+    font-size: 20px;
+    font-family: 'Yekan Bakh', sans-serif;
+}
+
+.form-group input[type="email"] {
+    width: 496.4px;
+    text-align: center;
+    padding: 10px 1px;
+    font-size: 24px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease;
+    font-family: 'Yekan Bakh', sans-serif;
+}
+
+.form-group input[type="email"]:focus {
+    border-color: #3498db;
+    outline: none;
+    background-color: #fff;
+}
+
+button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 20px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: 'Yekan Bakh', sans-serif; /* ✅ اعمال فونت */
+}
+
+button[type="submit"]:hover {
+    background-color: #0b5ed7;
+}
+
+.login-link-wrapper {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.login-link-wrapper p {
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+.btn-login {
+    width: 460px;
+    display: inline-block;
+    padding: 10px 20px;
+    font-family: 'Yekan Bakh', sans-serif;
+    font-size: 20px;
+    background-color: #2ecc71;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-login:hover {
+    background-color: #27ae60;
+}
+
+ul.errorlist {
+    margin-top: 10px;
+    color: #d00000;
+    font-size: 16px;
+    list-style: none;
+    padding: 0;
+    font-family: 'Yekan Bakh', sans-serif;
+}

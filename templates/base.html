@@ -1,0 +1,49 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <title>{% block title %}ارزیابی امنیت شبکه{% endblock %}</title>
+
+    <!-- استایل عمومی -->
+   <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <!-- Navbar -->
+    <header>
+        {% include 'navbar.html' %}
+    </header>
+
+    <!-- محتوای هر صفحه -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content" id="footer-content">
+            <p>&copy; 2025 ارزیابی امنیت. تمامی حقوق محفوظ است.</p>
+            <p>
+                تماس با ما:
+                <a style="color: #ecf0f1; text-decoration:none; font-size: 18px" href="mailto:support@cissecure.com">
+                    seyedbarghamadi@gmail.com
+                </a>
+            </p>
+            <ul class="social-links">
+                <li><a href="https://t.me/seyedbarghamadi">تلگرام</a></li>
+                <li><a href="https://wa.me/+989023952384">واتساپ</a></li>
+                <li><a href="https://www.linkedin.com/in/seyed-omid-barghamadi">لینکدین</a></li>
+            </ul>
+            <br/>
+            <p>ساخته شده با ❤️ در مرکز آپا دانشگاه گلستان</p>
+        </div>
+    </footer>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
