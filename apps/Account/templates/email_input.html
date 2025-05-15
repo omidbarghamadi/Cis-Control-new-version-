@@ -1,0 +1,37 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ثبت ایمیل</title>
+    <link rel="stylesheet" href="{% static 'css/email_input.css' %}">
+</head>
+<body>
+    <main>
+        <div class="form-container">
+            <div class="form-header">
+                <img src="../../../static/images/favicon.ico" alt="لوگو">
+                <h2>ثبت ایمیل</h2>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+
+                <div class="form-group">
+                    {{ form.email.label_tag }}
+                    {{ form.email }}
+                    {{ form.email.errors }}
+                </div>
+
+                <button type="submit">ارسال</button>
+                <div class="login-link-wrapper">
+                    <p>قبلاً ثبت‌نام کرده‌اید؟</p>
+                    <a href="#" class="btn-login">وارد شوید</a>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

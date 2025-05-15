@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}صفحه اصلی{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/landing.css' %}">
+{% endblock head %}
+
+{% block content %}
+<section style="padding-top: 100px" class="hero">
+  <div class="hero-content">
+    <h1>ارزیابی امنیت شبکه بر اساس استانداردهای CIS</h1>
+    <p>با پاسخ دادن به پرسش‌های دقیق و تخصصی، امنیت شبکه خود را بسنجید و بهبود دهید.</p>
+  </div>
+  <a href="/register" class="hero-btn">شروع کنید!</a>
+</section>
+
+<section id="features" class="features">
+    <h2>ویژگی‌ها</h2>
+    <div class="feature-list">
+        <div class="feature-item">
+            <div class="feature-icon mb-3">🔒</div>
+            <h3>پایه‌های امنیتی قوی</h3>
+            <p>تمامی ارزیابی‌ها مطابق با کنترل‌های مطرح شده در CIS Controls انجام می‌شود.</p>
+        </div>
+        <div class="feature-item">
+            <div class="feature-icon mb-3">📊</div>
+            <h3>گزارش‌های تحلیلی</h3>
+            <p>با تحلیل پاسخ‌های شما، گزارشی دقیق از وضعیت امنیتی دریافت خواهید کرد.</p>
+        </div>
+        <div class="feature-item">
+            <div class="feature-icon mb-3">🏢</div>
+            <h3>مناسب شرکت‌ها</h3>
+            <p>این سیستم برای شرکت‌ها و سازمان‌هایی طراحی شده که امنیت شبکه برایشان حیاتی است.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

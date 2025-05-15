@@ -1,0 +1,96 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>تأیید ایمیل</title>
+        <link rel="stylesheet" href="{% static 'css/verify_code.css' %}">
+    </head>
+    <body>
+        <div class="form-container">
+            <div class="form-header">
+                <img src="../../../static/images/favicon.ico" alt="لوگو">
+                <h2>تأیید ایمیل</h2>
+            </div>
+            <form method="post">
+                <ul class="errorlist">
+                    <li>لطفاً کد تأیید ۶ رقمی را وارد کنید.</li>
+                </ul>
+                <div class="verification-inputs">
+                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
+                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
+                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
+                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
+                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
+                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
+                </div>
+                <button type="submit">ثبت</button>
+                <button type="button" class="resend-btn" disabled id="resendButton">ارسال مجدد (120)</button>
+            </form>
+        </div>
+
+        <div id="toast" class="toast">کد تأیید با موفقیت ارسال شد!</div>
+
+        <script>
+           const inputs = document.querySelectorAll('.verification-inputs input');
+
+            inputs.forEach((input, index) => {
+                input.addEventListener('input', (e) => {
+                    // اگر کاراکتر وارد شد، به مربع بعدی برود
+                    if (input.value.length === 1) {
+                        if (index < inputs.length - 1) {
+                            inputs[index + 1].focus();
+                        }
+                    }
+                });
+
+                input.addEventListener('keydown', (e) => {
+                    // اگر کلید Backspace فشار داده شد، به مربع قبلی برگردد
+                    if (e.key === 'Backspace' && input.value === '') {
+                        if (index > 0) {
+                            inputs[index - 1].focus();
+                        }
+                    }
+                });
+            });
+
+            // تایمر 120 ثانیه‌ای
+            let timerDuration = 120; // مدت زمان تایمر
+            const resendButton = document.getElementById('resendButton');
+            const toast = document.getElementById('toast');
+
+            function startTimer() {
+                let timeLeft = timerDuration;
+
+                const timerInterval = setInterval(() => {
+                    resendButton.textContent = `ارسال مجدد (${timeLeft})`;
+                    timeLeft -= 1;
+
+                    if (timeLeft < 0) {
+                        clearInterval(timerInterval);
+                        resendButton.disabled = false;
+                        resendButton.classList.add('active');
+                        resendButton.textContent = 'ارسال مجدد';
+                    }
+                }, 1000);
+            }
+
+            // نمایش توست
+            function showToast() {
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 3000);
+            }
+
+            // شروع تایمر هنگام بارگذاری صفحه
+            startTimer();
+
+            resendButton.addEventListener('click', () => {
+                resendButton.disabled = true;
+                resendButton.classList.remove('active');
+                startTimer();
+                showToast(); // نمایش توست موفقیت
+            });
+        </script>
+    </body>
+</html>

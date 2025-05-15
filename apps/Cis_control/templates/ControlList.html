@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}کنترل‌های امنیتی CIS{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/ControlList.css' %}">
+{% endblock %}
+
+{% block content %}
+    <!-- Page Title -->
+    <h1>کنترل‌های امنیتی CIS</h1>
+
+    <!-- Controls List -->
+    <div class="controls-container">
+        {% for control in controls %}
+            <div class="control-card" onclick="toggleDetail(this)">
+                <div class="control-title">{{ control.id }} - {{ control.title }}</div>
+                <div class="control-details">{{ control.description }}</div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        function toggleDetail(card) {
+            card.classList.toggle("active");
+        }
+    </script>
+{% endblock %}

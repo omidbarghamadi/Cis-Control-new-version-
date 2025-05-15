@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <title>ایمیل تایید</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Tahoma, sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            padding: 20px;
+        }
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: right;
+        }
+        .code-box {
+            font-size: 24px;
+            font-weight: bold;
+            background-color: #3a6ea5;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+            letter-spacing: 5px;
+        }
+        .footer {
+            font-size: 13px;
+            color: #666;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🎉 به سامانه CIS Control خوش آمدید!</h2>
+        <p>سلام 👋</p>
+        <p>از ثبت‌نام شما در سامانه ارزیابی امنیت شبکه شرکت‌ها خوشحالیم. برای ادامه ثبت‌نام، لطفاً کد تأیید زیر را در صفحه وارد کنید:</p>
+        <div class="code-box">{{ code }}</div>
+        <p>⏳ توجه: این کد فقط به مدت ۲ دقیقه معتبر است.</p>
+        <div class="footer">
+            این ایمیل به‌صورت خودکار ارسال شده است، لطفاً به آن پاسخ ندهید.<br>
+            با احترام،<br>
+            تیم فنی CIS 🛡️
+        </div>
+    </div>
+</body>
+</html>
