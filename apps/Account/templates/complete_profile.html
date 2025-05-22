@@ -1,2 +1,322 @@
-{% extends "base.html" %}
 {% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <title>تکمیل اطلاعات شرکت</title>
+    <style>
+        /* همان استایل قبلی شما */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Yekan Bakh', sans-serif;
+            background-color: #f4f6fb;
+            color: #333;
+            direction: rtl;
+            text-align: right;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 540px;
+            background-color: #fff;
+            padding: 32px 28px 28px 28px;
+            border-radius: 15px;
+            box-shadow: 0 4px 28px 0 rgba(44,62,80,.09);
+            font-family: 'Yekan Bakh', sans-serif;
+            margin: auto;
+        }
+
+        .form-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 28px;
+        }
+
+        .form-header img {
+            height: 52px;
+            margin-left: 18px;
+        }
+
+        .form-header h2 {
+            margin: 0;
+            color: #23272b;
+            font-size: 1.55rem;
+            font-weight: 700;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 3px;
+        }
+
+        label {
+            font-size: 15px;
+            margin-bottom: 6px;
+            color: #434343;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        .required-star {
+            color: #e53935;
+            margin-right: 5px;
+            font-size: 18px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 9px 11px;
+            font-size: 15px;
+            border: 1px solid #d2d6db;
+            border-radius: 7px;
+            background: #fafbfc;
+            font-family: 'Yekan Bakh', sans-serif;
+            transition: border-color 0.25s;
+            box-sizing: border-box;
+            color: #222;
+            resize: none;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #3498db;
+            outline: none;
+            background: #fff;
+        }
+
+        input[type="file"] {
+            background: none;
+            padding: 4px 0 0 0;
+        }
+
+        .readonly-field {
+            background-color: #f2f2f2;
+            border: 1px solid #e0e0e0;
+            cursor: not-allowed;
+            font-size: 20px;
+            text-align: center;
+            color: #a0a0a0;
+        }
+
+        .error-message {
+            color: #e53935;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: center;
+            margin-top: 18px;
+        }
+
+        button[type="submit"] {
+            padding: 11px 34px;
+            font-size: 16px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-family: 'Yekan Bakh', sans-serif;
+            transition: background-color 0.2s;
+            box-shadow: 0 2px 6px 0 rgba(44,62,80,.04);
+        }
+
+        button[type="submit"]:hover {
+            background-color: #186bb6;
+        }
+
+        @media (max-width: 650px) {
+            .form-container {
+                padding: 16px 5vw 18px 5vw;
+                max-width: 98vw;
+            }
+            .form-header img {
+                height: 40px;
+                margin-left: 10px;
+            }
+            .form-header h2 {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        {% csrf_token %}
+        <div class="form-header">
+            <img src="{% static 'images/favicon.ico' %}" alt="لوگو سایت">
+            <h2>تکمیل اطلاعات شرکت</h2>
+        </div>
+        <form method="post" enctype="multipart/form-data" id="company-form" autocomplete="off" novalidate>
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                <div class="error-message">{{ form.non_field_errors }}</div>
+            {% endif %}
+            <div class="form-group">
+                <label for="email">ایمیل</label>
+                <input type="email" id="email" name="email" value="{{ request.session.email }}" class="readonly-field" readonly>
+            </div>
+            <div class="form-group">
+                <label for="password1">رمز عبور <span class="required-star">*</span></label>
+                <input type="password" id="password1" name="password1" minlength="8" required
+                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()_\-+=])[A-Za-z\d@$!%*?&#^()_\-+=]{8,}$"
+                    autocomplete="new-password"
+                    placeholder="حداقل ۸ کاراکتر، شامل حروف بزرگ، کوچک، عدد و نماد" />
+                <div class="error-message" id="password1-error"></div>
+            </div>
+            <div class="form-group">
+                <label for="password2">تکرار رمز عبور <span class="required-star">*</span></label>
+                <input type="password" id="password2" name="password2" minlength="8" required autocomplete="new-password" />
+                <div class="error-message" id="password2-error"></div>
+            </div>
+            <div class="form-group">
+                <label for="name">نام شرکت <span class="required-star">*</span></label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="responsible_person">نام مسئول <span class="required-star">*</span></label>
+                <input type="text" id="responsible_person" name="responsible_person" required>
+            </div>
+            <div class="form-group">
+                <label for="phone_number">شماره تماس <span class="required-star">*</span></label>
+                <input type="tel" id="phone_number" name="phone_number" required>
+            </div>
+            <div class="form-group">
+                <label for="logo">لوگوی شرکت</label>
+                <input type="file" id="logo" name="logo" accept="image/*">
+            </div>
+            <div class="form-group">
+                <label for="website">وبسایت</label>
+                <input type="url" id="website" name="website">
+            </div>
+            <div class="form-group">
+                <label for="province">استان</label>
+                <select id="province" name="province" required>
+                    <option value="">در حال بارگذاری...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="city">شهر</label>
+                <select id="city" name="city" required>
+                    <option value="">ابتدا استان را انتخاب کنید</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="address">آدرس <span class="required-star">*</span></label>
+                <textarea id="address" name="address" rows="3" required></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="submit">ثبت اطلاعات</button>
+            </div>
+        </form>
+    </div>
+
+   <script>
+    // استان و شهر مانند قبل
+    document.addEventListener('DOMContentLoaded', function () {
+        const provinceSelect = document.getElementById('province');
+        const citySelect = document.getElementById('city');
+
+        fetch('/account/api/provinces/')
+            .then(response => response.json())
+            .then(data => {
+                provinceSelect.innerHTML = '<option value="">انتخاب استان</option>';
+                data.forEach(state => {
+                    const option = document.createElement('option');
+                    option.value = state.name;
+                    option.textContent = state.name;
+                    provinceSelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('خطا در گرفتن لیست استان‌ها:', error);
+                provinceSelect.innerHTML = '<option value="">خطا در بارگذاری استان‌ها</option>';
+            });
+
+        provinceSelect.addEventListener('change', function () {
+            const stateId = this.value;
+            citySelect.innerHTML = '<option value="">در حال بارگذاری...</option>';
+
+            if (stateId) {
+                fetch(`/account/api/cities/?state_id=${stateId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        citySelect.innerHTML = '<option value="">انتخاب شهر</option>';
+                        data.forEach(city => {
+                            const option = document.createElement('option');
+                            option.value = city.name;
+                            option.textContent = city.name;
+                            citySelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('خطا در گرفتن شهرها:', error);
+                        citySelect.innerHTML = '<option value="">خطا در بارگذاری شهرها</option>';
+                    });
+            } else {
+                citySelect.innerHTML = '<option value="">ابتدا استان را انتخاب کنید</option>';
+            }
+        });
+
+        // Password validation
+        const form = document.getElementById('company-form');
+        const password1 = document.getElementById('password1');
+        const password2 = document.getElementById('password2');
+        const password1Error = document.getElementById('password1-error');
+        const password2Error = document.getElementById('password2-error');
+
+        function validatePasswordStrength(password) {
+            // حداقل ۸ کاراکتر، حروف بزرگ، کوچک، عدد، نماد
+            const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()_\-+=])[A-Za-z\d@$!%*?&#^()_\-+=]{8,}$/;
+            return regex.test(password);
+        }
+
+        function validatePasswords() {
+            let valid = true;
+            password1Error.textContent = "";
+            password2Error.textContent = "";
+
+            if (!validatePasswordStrength(password1.value)) {
+                password1Error.textContent = "رمز عبور باید حداقل ۸ کاراکتر، شامل حروف بزرگ، کوچک، عدد و یک نماد باشد.";
+                valid = false;
+            }
+            if (password1.value !== password2.value) {
+                password2Error.textContent = "رمز عبور و تکرار آن یکسان نیستند.";
+                valid = false;
+            }
+            return valid;
+        }
+
+        password1.addEventListener('input', validatePasswords);
+        password2.addEventListener('input', validatePasswords);
+
+        form.addEventListener('submit', function(e) {
+            if (!validatePasswords()) {
+                e.preventDefault();
+            }
+        });
+    });
+    </script>
+</body>
+</html>

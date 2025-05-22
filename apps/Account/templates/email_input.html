@@ -33,5 +33,23 @@
             </form>
         </div>
     </main>
+    {% if messages %}
+        <div id="toast-container">
+            {% for message in messages %}
+                <div class="toast {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <script>
+        setTimeout(() => {
+            const toasts = document.querySelectorAll('.toast');
+            toasts.forEach(toast => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 500);  // پاک شدن از DOM
+            });
+        }, 4000);  // مدت نمایش Toast (۴ ثانیه)
+    </script>
 </body>
 </html>

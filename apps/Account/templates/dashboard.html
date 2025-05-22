@@ -1,2 +1,252 @@
-{% extends "base.html" %}
 {% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>داشبورد شرکت</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        body {
+            direction: rtl;
+            font-family: 'Yekan Bakh', sans-serif;
+            background: #f6fafd;
+            margin: 0;
+            padding: 0;
+            color: #23272b;
+        }
+        .sidebar {
+            height: 100vh;
+            width: 200px;
+            position: fixed;
+            top: 0;
+            right: 0;
+            background: #3498db;
+            box-shadow: -2px 0 16px #b0d5fa66;
+            padding-top: 48px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: right 0.3s, box-shadow 0.2s;
+        }
+        .sidebar.closed {
+            right: -220px;
+            box-shadow: none;
+        }
+        .sidebar a {
+            padding: 12px 30px 12px 10px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.2s;
+            border-radius: 8px 0 0 8px;
+            margin: 0 10px;
+        }
+        .sidebar a.active, .sidebar a:hover {
+            background: #217dbb;
+        }
+        .sidebar a i {
+            min-width: 20px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+        .closebtn {
+            position: absolute;
+            top: 12px;
+            left: 15px;
+            font-size: 26px;
+            color: #fff;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 101;
+            padding: 0;
+        }
+        .openbtn {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 110;
+            background: #3498db;
+            color: #fff;
+            border: none;
+            font-size: 26px;
+            padding: 4px 14px 2px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: none;
+            box-shadow: 0 2px 8px #b0d5fa33;
+        }
+        .sidebar.closed ~ .openbtn {
+            display: block;
+        }
+        @media (max-width: 900px) {
+            .dashboard-container {
+                margin-right: 0;
+            }
+            .sidebar {
+                width: 100vw;
+                left: unset;
+                right: 0;
+                border-radius: 0;
+                box-shadow: 0 6px 24px #b0d5fa44;
+                padding-top: 48px;
+            }
+            .sidebar.closed {
+                right: -105vw;
+            }
+        }
+        .dashboard-container {
+            max-width: 600px;
+            margin: 48px auto 0 auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(44,62,80,0.09);
+            padding: 36px 32px;
+            margin-right: 220px;
+            transition: margin-right 0.3s;
+        }
+        .sidebar.closed ~ .dashboard-container {
+            margin-right: 0;
+            transition: margin-right 0.3s;
+        }
+        .dashboard-header {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+        .dashboard-header img {
+            height: 80px;
+            width: 80px;
+            object-fit: contain;
+            border-radius: 12px;
+            background: #fafbfc;
+            border: 1px solid #e0e0e0;
+        }
+        .dashboard-title {
+            font-size: 1.7rem;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            margin-top: 12px;
+        }
+        th, td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #f0f0f0;
+            text-align: right;
+        }
+        th {
+            color: #888;
+            font-size: 14px;
+            font-weight: 400;
+        }
+        .logout-btn {
+            background: #e53935;
+            color: #fff;
+            border: none;
+            padding: 9px 24px;
+            border-radius: 7px;
+            font-family: "Yekan Bakh";
+            font-size: 15px;
+            cursor: pointer;
+            float: left;
+        }
+        .logout-btn:hover {
+            background: #b71c1c;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar" id="mySidebar">
+        <button class="closebtn" onclick="closeSidebar()" title="بستن منو">&times;</button>
+        <a href="#" class="active"><i class="fas fa-home"></i> صفحه اصلی</a>
+        <a href="{% url 'controls list' %}"><i class="fas fa-sliders-h"></i> کنترل‌ها</a>
+        <a href="#"><i class="fas fa-chart-line"></i> داشبورد</a>
+        <a href="#"><i class="fas fa-user"></i> پروفایل</a>
+        <a href="#"><i class="fas fa-file-alt"></i> گزارش‌ها</a>
+        <a href="#"><i class="fas fa-cog"></i> تنظیمات</a>
+        <a href="{% url 'logout' %}" style="color: #ffebee;"><i class="fas fa-sign-out-alt"></i> خروج</a>
+    </div>
+    <button class="openbtn" id="openSidebarBtn" onclick="openSidebar()" title="باز کردن منو">&#9776;</button>
+    <div class="dashboard-container" id="mainContent">
+        <div class="dashboard-header">
+            {% if company and company.logo %}
+                <img src="{{ company.logo.url }}" alt="لوگوی شرکت">
+            {% else %}
+                <img src="{% static 'images/company-placeholder.png' %}" alt="لوگو پیش‌فرض">
+            {% endif %}
+            <span class="dashboard-title"> شرکت {{ company.name|default:user.email }}</span>
+        </div>
+
+        <table>
+            <tr>
+                <th>ایمیل</th>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <th>نام شرکت</th>
+                <td>{{ company.name }}</td>
+            </tr>
+            <tr>
+                <th>نام مسئول</th>
+                <td>{{ company.responsible_person }}</td>
+            </tr>
+            <tr>
+                <th>شماره تماس</th>
+                <td>{{ company.phone_number }}</td>
+            </tr>
+            <tr>
+                <th>وبسایت</th>
+                <td>
+                    {% if company.website %}
+                        <a href="{{ company.website }}" target="_blank">{{ company.website }}</a>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>استان</th>
+                <td>{{ company.province }}</td>
+            </tr>
+            <tr>
+                <th>شهر</th>
+                <td>{{ company.city }}</td>
+            </tr>
+            <tr>
+                <th>آدرس</th>
+                <td>{{ company.address }}</td>
+            </tr>
+        </table>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="logout-btn">خروج</button>
+        </form>
+    </div>
+    {% if error_message %}
+      <div class="error-message">{{ error_message }}</div>
+    {% endif %}
+    <script>
+        function closeSidebar() {
+            document.getElementById('mySidebar').classList.add('closed');
+            document.getElementById('openSidebarBtn').style.display = 'block';
+            document.getElementById('mainContent').style.marginRight = '0';
+        }
+        function openSidebar() {
+            document.getElementById('mySidebar').classList.remove('closed');
+            document.getElementById('openSidebarBtn').style.display = 'none';
+            document.getElementById('mainContent').style.marginRight = '220px';
+        }
+        // پیشفرض دکمه باز کردن منو مخفی باشد (منو باز است)
+        document.getElementById('openSidebarBtn').style.display = 'none';
+    </script>
+</body>
+</html>

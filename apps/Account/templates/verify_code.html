@@ -1,96 +1,168 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>تأیید ایمیل</title>
-        <link rel="stylesheet" href="{% static 'css/verify_code.css' %}">
-    </head>
-    <body>
-        <div class="form-container">
-            <div class="form-header">
-                <img src="../../../static/images/favicon.ico" alt="لوگو">
-                <h2>تأیید ایمیل</h2>
-            </div>
-            <form method="post">
-                <ul class="errorlist">
-                    <li>لطفاً کد تأیید ۶ رقمی را وارد کنید.</li>
-                </ul>
-                <div class="verification-inputs">
-                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
-                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
-                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
-                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
-                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
-                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
-                </div>
-                <button type="submit">ثبت</button>
-                <button type="button" class="resend-btn" disabled id="resendButton">ارسال مجدد (120)</button>
-            </form>
+<head>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تأیید ایمیل</title>
+    <link rel="stylesheet" href="{% static 'css/verify_code.css' %}">
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-header">
+            <img src="{% static 'images/favicon.ico' %}" alt="لوگو">
+            <h2>تأیید ایمیل</h2>
         </div>
+        <form method="post">
+            {% csrf_token %}
+            <ul class="errorlist">
+                <li>لطفاً کد تأیید ۶ رقمی را وارد کنید.</li>
+            </ul>
+            <div class="verification-inputs">
+                <input name="code_1" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
+                <input name="code_2" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
+                <input name="code_3" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
+                <input name="code_4" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
+                <input name="code_5" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
+                <input name="code_6" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
+            </div>
+            <button type="submit">ثبت</button>
+            <button type="button" class="resend-btn" disabled id="resendButton">ارسال مجدد (120)</button>
+        </form>
+    </div>
 
-        <div id="toast" class="toast">کد تأیید با موفقیت ارسال شد!</div>
+    {% if messages %}
+        {% for message in messages %}
+            <div id="toast" class="toast {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% else %}
+        <div id="toast" class="toast success">کد تأیید با موفقیت ارسال شد!</div>
+    {% endif %}
 
-        <script>
-           const inputs = document.querySelectorAll('.verification-inputs input');
+    <script>
+        // اعتبارسنجی و حرکت بین خانه‌های کد تأیید
+        const inputs = document.querySelectorAll('.verification-inputs input');
+        const resendButton = document.getElementById('resendButton');
+        const toast = document.getElementById('toast');
+        const timerDuration = 120;
+        const timerKey = "resend-timer-verify-code";
 
-            inputs.forEach((input, index) => {
-                input.addEventListener('input', (e) => {
-                    // اگر کاراکتر وارد شد، به مربع بعدی برود
-                    if (input.value.length === 1) {
-                        if (index < inputs.length - 1) {
-                            inputs[index + 1].focus();
-                        }
-                    }
-                });
-
-                input.addEventListener('keydown', (e) => {
-                    // اگر کلید Backspace فشار داده شد، به مربع قبلی برگردد
-                    if (e.key === 'Backspace' && input.value === '') {
-                        if (index > 0) {
-                            inputs[index - 1].focus();
-                        }
-                    }
-                });
+        // حرکت بین خانه‌های کد
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', () => {
+                if (input.value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
             });
 
-            // تایمر 120 ثانیه‌ای
-            let timerDuration = 120; // مدت زمان تایمر
-            const resendButton = document.getElementById('resendButton');
-            const toast = document.getElementById('toast');
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && input.value === '' && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
 
-            function startTimer() {
-                let timeLeft = timerDuration;
+            // فقط عدد وارد شود
+            input.addEventListener('input', (e) => {
+                input.value = input.value.replace(/[^0-9]/g, '');
+            });
+        });
 
-                const timerInterval = setInterval(() => {
-                    resendButton.textContent = `ارسال مجدد (${timeLeft})`;
-                    timeLeft -= 1;
+        // مدیریت تایمر ارسال مجدد با localStorage
+        function startTimer(timeLeft = timerDuration) {
+            const endTime = Date.now() + timeLeft * 1000;
+            localStorage.setItem(timerKey, endTime);
 
-                    if (timeLeft < 0) {
-                        clearInterval(timerInterval);
-                        resendButton.disabled = false;
-                        resendButton.classList.add('active');
-                        resendButton.textContent = 'ارسال مجدد';
-                    }
-                }, 1000);
+            resendButton.disabled = true;
+            resendButton.classList.remove('active');
+            resendButton.textContent = `ارسال مجدد (${timeLeft})`;
+
+            const timerInterval = setInterval(() => {
+                let now = Date.now();
+                let remaining = Math.max(0, Math.round((endTime - now) / 1000));
+                resendButton.textContent = `ارسال مجدد (${remaining})`;
+
+                if (remaining <= 0) {
+                    clearInterval(timerInterval);
+                    resendButton.disabled = false;
+                    resendButton.classList.add('active');
+                    resendButton.textContent = 'ارسال مجدد';
+                    localStorage.removeItem(timerKey);
+                }
+            }, 1000);
+        }
+
+        // مقدار CSRF را از meta tag بخوان
+        function getCSRFToken() {
+            let meta = document.querySelector('meta[name="csrf-token"]');
+            if (meta) return meta.getAttribute('content');
+            // اگر meta نبود، سعی کن از اینپوت مخفی داخل فرم بگیری
+            let input = document.querySelector('input[name="csrfmiddlewaretoken"]');
+            if (input) return input.value;
+            return '';
+        }
+
+        // نمایش توست
+        function showToast(message, type = "success") {
+            if (!toast) return;
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // اجرا پس از بارگذاری صفحه
+        window.addEventListener("load", () => {
+            // تایمر را ادامه بده اگر هنوز فعال است
+            const savedEndTime = localStorage.getItem(timerKey);
+            if (savedEndTime && Number(savedEndTime) > Date.now()) {
+                let remaining = Math.round((Number(savedEndTime) - Date.now()) / 1000);
+                startTimer(remaining);
+            } else {
+                startTimer();
             }
 
-            // نمایش توست
-            function showToast() {
+            // نمایش توست اولیه
+            if (toast && toast.textContent.trim() !== "") {
                 toast.classList.add('show');
                 setTimeout(() => toast.classList.remove('show'), 3000);
             }
+        });
 
-            // شروع تایمر هنگام بارگذاری صفحه
+        // ارسال مجدد دستی (با ajax)
+        resendButton.addEventListener('click', () => {
+            resendButton.disabled = true;
+            resendButton.classList.remove('active');
             startTimer();
 
-            resendButton.addEventListener('click', () => {
-                resendButton.disabled = true;
-                resendButton.classList.remove('active');
-                startTimer();
-                showToast(); // نمایش توست موفقیت
+            fetch('/account/resend-verification-code/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()
+                },
+                body: JSON.stringify({}) // نیازی به داده نیست چون ایمیل در session هست
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    showToast(data.message, 'success');
+                } else {
+                    showToast('کد تأیید با موفقیت ارسال شد!', 'success');
+                }
+            })
+            .catch(error => {
+                showToast("خطا در ارسال مجدد کد تأیید!", 'error');
             });
-        </script>
-    </body>
+        });
+
+        // جلوگیری از ریست شدن تایمر با ارسال فرم (ثبت کد)
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', function() {
+                // تایمر را ریست نکن! هیچ کاری نکن
+                // فقط اجازه بده فرم به حالت عادی ارسال شود
+            });
+        }
+    </script>
+</body>
 </html>

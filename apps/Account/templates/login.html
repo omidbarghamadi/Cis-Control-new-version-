@@ -1,2 +1,202 @@
-{% extends "base.html" %}
 {% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ورود به حساب کاربری</title>
+    <style>
+        body {
+            background-color: #f0f0f5;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Yekan Bakh', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            width: 370px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.07);
+            padding: 36px 30px 30px 30px;
+        }
+        .login-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 18px;
+            gap: 14px;
+        }
+        .login-header img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            border-radius: 8px;
+            background: #fff;
+        }
+        .login-header h2 {
+            color: #000000;
+            font-size: 28px;
+            text-align: center;
+            font-weight: bold;
+            letter-spacing: -.5px;
+            margin: 0;
+        }
+        .form-group {
+            margin-bottom: 18px;
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 7px;
+            font-size: 20px;
+            color: #555;
+        }
+        .required-star {
+            color: #d00000;
+            margin-right: 2px;
+            font-size: 17px;
+            vertical-align: middle;
+        }
+        input[type="email"], input[type="password"] {
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-size: 20px;
+            font-family: 'Yekan Bakh', sans-serif;
+            transition: border-color .2s;
+            background: #f9f9f9;
+            direction: ltr;
+        }
+        input[type="email"]:focus, input[type="password"]:focus {
+            border-color: #3498db;
+            outline: none;
+            background: #fff;
+        }
+        .login-btn {
+            background: #3498db;
+            color: #fff;
+            width: 100%;
+            padding: 12px 0;
+            border: none;
+            border-radius: 7px;
+            font-size: 18px;
+            font-family: 'Yekan Bakh', sans-serif;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 8px;
+            transition: background 0.2s;
+        }
+        .login-btn:hover {
+            background: #217dbb;
+        }
+        .extra-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 16px;
+            font-size: 16px;
+        }
+        .extra-links a {
+            color: #3498db;
+            text-decoration: none;
+            transition: color .2s;
+        }
+        .extra-links a:hover {
+            color: #217dbb;
+        }
+        .alert {
+            background: #ffd6d6;
+            color: #d00000;
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin-bottom: 18px;
+            font-size: 15px;
+            text-align: center;
+        }
+
+        #toast-container {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 9999;
+        }
+
+        .toast {
+            background-color: #444;
+            color: white;
+            padding: 12px 20px;
+            margin-top: 10px;
+            border-radius: 6px;
+            opacity: 0.95;
+            transition: opacity 0.5s ease;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .toast.success { background-color: #28a745; }
+        .toast.warning { background-color: #ffc107; color: black; }
+        .toast.error { background-color: #dc3545; }
+        .toast.info { background-color: #17a2b8; }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <img src="{% static 'images/favicon.ico' %}" alt="لوگو">
+            <h2>ورود به حساب کاربری</h2>
+        </div>
+        {% if form.errors or error %}
+            <div class="alert">
+                {% if error %}
+                    {{ error }}
+                {% else %}
+                    لطفاً ایمیل و رمز عبور را به درستی وارد کنید.
+                {% endif %}
+            </div>
+        {% endif %}
+        <form method="post" autocomplete="off">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="email">
+                    <span class="required-star">*</span>
+                    ایمیل
+                </label>
+                <input type="email" id="email" name="email" required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="password">
+                    <span class="required-star">*</span>
+                    رمز عبور
+                </label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="login-btn">ورود</button>
+        </form>
+        <div class="extra-links">
+{#            <a href="{% url 'password_reset' %}">فراموشی رمز عبور؟</a>#}
+            <a href="{% url 'email_input' %}">ثبت‌نام</a>
+        </div>
+    </div>
+    {% if messages %}
+        <div id="toast-container">
+            {% for message in messages %}
+                <div class="toast {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <script>
+        setTimeout(() => {
+            const toasts = document.querySelectorAll('.toast');
+            toasts.forEach(toast => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 500);  // پاک شدن از DOM
+            });
+        }, 4000);  // مدت نمایش Toast (۴ ثانیه)
+    </script>
+</body>
+</html>
